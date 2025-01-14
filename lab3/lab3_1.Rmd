@@ -33,14 +33,36 @@ spring <- c("Buckeye", "Buckeye", "Buckeye", "Benton", "Benton", "Benton", "Trav
 ```
 
 1. Build a data frame called `hsprings` with the above data. Name the temperature column `temp_C`. Print out the data frame.  
+```{r}
+hsprings <-  tibble(temp_C=temp, name, spring)
+hsprings
+```
 
 2. Change the column titled `name` to `scientist`, leave the other column names the same. Print out the data frame names.  
+```{r}
+hsprings <- tibble(temp, scientist=name, spring)
+hsprings
+```
 
 3. Our scientists forgot to record the depth data for each spring. Here it is as a vector, add it as a new column called depth_ft: `c(4.15, 4.13, 4.12, 3.21, 3.23, 3.20, 5.67, 5.65, 5.66)`. Print out the data frame.
+```{r}
+depth_ft <- c(4.15, 4.13, 4.12, 3.21, 3.23, 3.20, 5.67, 5.65, 5.66)
+```
+```{r}
+hsprings <- tibble(temp, scientist=name, spring, depth_ft)
+hsprings
+```
 
 4. Calculate the mean temperature of all of the temperature measurements.
+```{r}
+mean(hsprings$temp)
+temp <- hsprings[ ,2]#selecting the second column 
+```
 
 5. Save your hot springs data as a `.csv` file! Do not allow row names. 
+```{r}
+write.csv(hsprings, "hsprings.csv", row.names=FALSE) #prevents R from adding a new column with numbers, exporting that will appear in your repository, a csv is a comma separated value, readable by most programs 
+```
 
 6. Go to the environment panel and push the broom to clear your environment.  
 
@@ -63,12 +85,16 @@ Here we open a .csv file. Since we are using the tidyverse, we open the file usi
 
 In the previous part of the lab, you exported a `.csv` of hot springs data. Let's try to reload that `.csv`.  
 ```{r}
-hot_springs <- read_csv("hsprings_data.csv")
+hot_springs <- read_csv("hsprings_data.csv") #read the csv that we just made
 ```
 
 Use the `str()` function to get an idea of the data structure of `hot_springs`.  
 ```{r}
 str(hot_springs)
+```
+
+```{r}
+glimpse(hot_springs) #can use summary hot springs but math is not always accurate 
 ```
 
 What is the class of the scientist column? Change it to factor and then show the levels of that factor.  
@@ -82,7 +108,7 @@ hot_springs$scientist <- as.factor(hot_springs$scientist)
 
 Change the class of the springs column to factor.
 ```{r}
-hot_springs$spring <- as.factor(hot_springs$spring)
+hot_springs$spring <- as.factor(hot_springs$spring) #changing the characters spring to a factor
 ```
 
 Did our changes work? 
@@ -92,7 +118,7 @@ str(hot_springs)
 
 We can also check the levels of each column.
 ```{r}
-levels(hot_springs$scientist)
+levels(hot_springs$scientist) #levels only work on factors 
 ```
 
 ```{r}
@@ -101,6 +127,9 @@ levels(hot_springs$spring)
 
 ## Practice
 1. As part of homework 2, you saved data on the five tallest mountains in the world. Reload that data below and use the `str()` function to explore it's structure.  
+```{r}
+mountains <- read_csv("mountains_data.csv")
+```
 
 ## That's it! Let's take a break and then move on to part 2! 
 

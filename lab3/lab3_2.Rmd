@@ -36,22 +36,22 @@ Once data have been uploaded, you may want to get an idea of its structure, cont
 
 We can summarize our data frame with the`summary()` function.  
 ```{r}
-#summary(fish)
+summary(fish)
 ```
 
 `glimpse()` is another useful summary function.
 ```{r}
-#glimpse(fish)
+glimpse(fish)
 ```
 
 `nrow()` gives the numbers of rows.
 ```{r}
-#nrow(fish)
+nrow(fish)
 ```
 
 `ncol` gives the number of columns.
 ```{r}
-#ncol(fish)
+ncol(fish)
 ```
 
 `dim()` gives the dimensions.
@@ -61,48 +61,77 @@ We can summarize our data frame with the`summary()` function.
 
 `names` gives the column names.
 ```{r}
-#names(fish)
+names(fish) #important for names 
 ```
 
 `head()` prints the first n rows of the data frame.
 ```{r}
-#head(fish)
+head(fish) #first six rows 
 ```
 
 `tail()` prinst the last n rows of the data frame.
 ```{r}
-#tail(fish)
+tail(fish) #last six rows 
 ```
 
 `table()` is useful when you have a limited number of categorical variables. It produces fast counts of the number of observations in a variable. We will come back to this later... 
 ```{r}
-#table(fish$lakeid)
+table(fish$lakeid) #table is the command, fish is the data frame 
 ```
 
 ## Select
 Select is a way of sorting data frames by pulling out variables (columns) of interest.
 ```{r}
-#select(fish, lakeid, length)
+select(fish, lakeid, length) #pulls out your column of interest, selecting in the fish dataset the two columns lakeid and length 
 ```
 
 ## Filter
 Filter is a way of pulling out observations that meet specific criteria in a variable. We will work a lot more with this in the next lab.  
 ```{r}
-#filter(fish, length<=100)
+filter(fish, length<=100) #looks within a row and pulls out observations, selects through the fish with a length less than 100
 ```
 
 ## Practice
 1. Load the data `mammal_lifehistories_v2.csv` and place it into a new object called `mammals`.
+```{r}
+mammal <- read_csv("data/mammal_lifehistories_v2.csv")
+```
 
 2. Provide the dimensions of the data frame.
+```{r}
+dim(mammal)
+```
 
 3. Check the column names in the data frame. 
+```{r}
+names(mammal)
+```
 
 4. Use `str()` to show the structure of the data frame and its individual columns; compare this to `glimpse()`. 
+```{r}
+str(mammal)
+```
+
+```{r}
+glimpse(mammal)
+```
 
 5. Try the `table()` command to produce counts of mammal order, family, and genus.  
+```{r}
+table(mammal$order)
+```
+```{r}
+table(mammal$family)
+```
+```{r}
+table(mammal$Genus)
+      
+```
 
 6. Use the `filter()` command to pull out mammals that have a gestation period greater than or equal to one year.  
+```{r}
+filter(mammal, gestation>=1)
+```
 
 ## Wrap-up
 Please review the learning goals and be sure to use the code here as a reference when completing the homework.  
