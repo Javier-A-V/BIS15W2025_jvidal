@@ -89,6 +89,9 @@ The reindeer has the largest mean.hra.m2 for mammals
 ```{r}
 max(homerange$mean.hra.m2) 
 ```
+```{r}
+filter(homerange, mean.hra.m2==3550830977)
+```
 
 ## Knit and Upload
 Please knit your work as a .pdf or .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
