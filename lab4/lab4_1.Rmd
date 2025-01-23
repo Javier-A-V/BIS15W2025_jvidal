@@ -13,13 +13,13 @@ output:
 ## Learning Goals
 *At the end of this exercise, you will be able to:*    
 1. Use summary functions to assess the structure of a data frame.  
-2. Us the select function of `dplyr` to build data frames restricted to variable of interest.  
+2. Use the select function of `dplyr` to build data frames restricted to variable of interest.  
 3. Use the `rename()` function to provide new, consistent names to variables in data frames.  
 
 ## Load the tidyverse
 For the remainder of the quarter, we will work within the `tidyverse`. At the start of each lab, the library needs to be loaded as shown below.  
 ```{r message=FALSE, warning=FALSE}
-library("tidyverse")
+library("tidyverse") #dplyr 
 ```
 
 ## Load the data
@@ -52,7 +52,7 @@ names(fish)
 
 We are only interested in lakeid and scalelength.
 ```{r}
-select(fish, "lakeid", "scalelength")
+select(fish, "lakeid", "scalelength") #tells the command to which data frame the command is applied to, then the variables of interest, reshaping the data frame to focus on these two variables 
 ```
 
 Remember that you can save the output to a new dataframe.
@@ -62,17 +62,17 @@ fish_subset <- select(fish, "lakeid", "scalelength")
 
 To add a range of columns use `start_col:end_col`.
 ```{r}
-select(fish, fish_id:length)
+select(fish, fish_id:length) #pulls out fish id to length 
 ```
 
 The - operator is useful in select. It allows us to select everything except the specified variables.
 ```{r}
-select(fish, -"fish_id", -"annnumber", -"length", -"radii_length_mm")
+select(fish, -"fish_id", -"annnumber", -"length", -"radii_length_mm") #pull out all the variables except for these ones 
 ```
 
 For very large data frames with lots of variables, `select()` utilizes lots of different operators to make things easier. Let's say we are only interested in the variables that deal with length.
 ```{r}
-select(fish, contains("length"))
+select(fish, contains("length")) #pull out only those observations that contain the string "length" 
 ```
 
 When columns are sequentially named, `starts_with()` makes selecting columns easier.
@@ -121,42 +121,47 @@ mammals <- read_csv("data/mammal_lifehistories_v2.csv")
 
 1. Use one or more of your favorite functions to assess the structure of the data.  
 ```{r}
-
+glimpse(mammals)
 ```
 
 2. Are there any NAs? Are you sure? Try taking an average of `max. life` as a test.  
 ```{r}
+anyNA(mammals)
+```
 
+```{r}
+mean(mammals, 'max. life')
 ```
 
 3. What are the names of the columns in the `mammals` data?
 ```{r}
-
+names(mammals)
 ```
 
 4. Rename any columns that have capitol letters or punctuation issues.  
 ```{r}
+mammals_new <- rename(mammals, genus="Genus", wean_mass="wean mass", max_life="max. life", litter_size="litter size", litters_per_year="litters/year") #we only run rename once 
 
-```
 
 5. We are only interested in the variables `genus`, `species`, and `mass`. Use `select()` to build a new dataframe `mass` focused on these variables.
 ```{r}
-
+mass <- select(mammals_new, "genus", "species", "mass")
+mass
 ```
 
 6. What if we only wanted to exclude `order` and `family`? Use the `-` operator to make the code efficient.
 ```{r}
-
+select(mammals, -"order", -"family")
 ```
 
 7. Select the columns that include "mass" as part of the name.  
 ```{r}
-
+select(mammals_new, contains("mass"))
 ```
 
 8. Select all of the columns that are of class `character`.  
 ```{r}
-
+select_if(mammals_new, is.character)
 ```
 
 ## Janitor

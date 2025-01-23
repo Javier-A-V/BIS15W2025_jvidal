@@ -37,7 +37,7 @@ mammals <- rename(mammals, genus=Genus, wean_mass="wean mass", max_life="max. li
 ## `filter()`
 Unlike `select()`, `filter()` allows us to extract data that meet specific criteria within a variable. Let's say that we are interested only in the fish that occur in lake "AL". We can use `filter()` to extract these observations.  
 ```{r}
-filter(fish, lakeid == "AL")
+filter(fish, lakeid == "AL") #one = sign will not work because it is checking in both directions 
 ```
 
 Similarly, if we are only interested in fish with a length greater than or equal to 350 we can use `filter()` to extract these observations.  
@@ -55,12 +55,12 @@ filter(fish, lakeid != "AL")
 ## Using `filter()` with multiple observations  
 Filtering multiple values within the same variable requires the `%in%` [operator](https://www.tutorialspoint.com/r/r_operators.htm).    
 ```{r}
-filter(fish, length %in% c(167, 175))
+filter(fish, length %in% c(167, 175)) #multiple observations, using the in operator, filtering in fish in the variable length, values of 167 and 175
 ```
 
 Alternatively, you can use `between` if you are looking for a range of specific values.  
 ```{r}
-filter(fish, between(scalelength, 2.5, 3))
+scalelength <- filter(fish, between(scalelength, 2.5, 3))
 ```
 
 You can also extract observations "near" a certain value but you need to specify a tolerance.  
@@ -71,26 +71,26 @@ filter(fish, near(radii_length_mm, 2, tol = 0.2))
 ## Practice
 1. Filter the `fish` data to include the samples from lake "BO".
 ```{r}
-
+filter(fish, lakeid == "BO")
 ```
 
 2. Filter the data to include all lakes except "AR".
 ```{r}
-
+filter(fish , lakeid != "AR")
 ```
 
 3. Filter the fish data to include all fish with a scalelength within 0.25 of 8.
 ```{r}
-
+filter(fish, near(scalelength, 8, tol=0.25))
 ```
 
 4. Filter the fish data to include fish with a scalelength between 2 and 4.
 ```{r}
-
+filter(fish, between(scalelength, 2, 4))
 ```
 
 ```{r}
-
+filter(fish, scalelength %in% c(2, 4)) #this does not work to find ranges between 2 and 4 because the function is searching for scalelength that is exactly 2 and 4
 ```
 
 ## Wrap-up  
