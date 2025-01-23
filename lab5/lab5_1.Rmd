@@ -29,6 +29,18 @@ For this lab, we will use the following two datasets:
 fish <- read_csv("data/Gaeta_etal_CLC_data.csv")
 ```
 
+```{r}
+fishlength <- select(fish, "lakeid", "length")
+```
+
+```{r}
+BOlength <- filter(fishlength, lakeid == "BO")
+```
+
+```{r}
+mean(BOlength$length)
+```
+
 2. S. K. Morgan Ernest. 2003. Life history characteristics of placental non-volant mammals. Ecology 84:3402.   [link](http://esapubs.org/archive/ecol/E084/093/)  
 ```{r}
 mammals <- read_csv("data/mammal_lifehistories_v2.csv")
@@ -41,7 +53,7 @@ mammals <- rename(mammals, genus="Genus", wean_mass="wean mass", max_life= "max.
 
 Do you remember the easier way?
 ```{r}
-
+clean_names(mammals)
 ```
 
 ## Review
