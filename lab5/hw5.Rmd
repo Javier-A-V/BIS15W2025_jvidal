@@ -24,40 +24,69 @@ Reference: Koerner SE, Poulsen JR, Blanchard EJ, Okouyi J, Clark CJ. Vertebrate 
 
 **1. Load `IvindoData_DryadVersion.csv` and store it as a new object called `gabon`.**
 ```{r}
-
+gabon <- read.csv("data/IvindoData_DryadVersion.csv")
 ```
 
 **2. Use one or more of the summary functions you have learned to get an idea of the structure of the data.**  
 ```{r}
-
+summary(gabon)
+```
+  
+```{r}
+names(gabon)
+```
+  
+```{r}
+is.factor("HuntCat")
 ```
   
 **3. Use `mutate()` Change the variables `HuntCat`, `LandUse`, and `TransectID` to factors.**
 ```{r}
-
+gabon %>%
+  mutate(HuntCat=as.factor(HuntCat), LandUse=as.factor(LandUse), TransectID=as.factor(TransectID)) %>%
+  select("HuntCat", "LandUse", "TransectID")
 ```
 
 **4. Use `filter` to make three new dataframes focused only on 1. national parks, 2. logging concessions, and 3. neither. Have a look at the README in the data folder so you understand the variables.**
 ```{r}
+national_parks <- filter(gabon, LandUse=="Park")
+```
 
+```{r}
+logging_c <- filter(gabon, LandUse=="Logging" )
+```
+
+```{r}
+net <- filter(gabon, LandUse=="Neither")
 ```
 
 **5. How many transects are recorded for each land use type?**
 ```{r}
+national_parks %>%
+  select(TransectID)
+```
 
+```{r}
+logging_c %>%
+  select(TransectID)
+```
+
+```{r}
+net %>% 
+  select(TransectID)
 ```
 
 **6. For which land use type (national parks, logging, or neither) is average all species diversity the greatest?**
 ```{r}
-
+mean(national_parks$Diversity_AllSpecies)
 ```
 
 ```{r}
-
+mean(net$Diversity_AllSpecies)
 ```
 
 ```{r}
-
+mean(logging_c$Diversity_AllSpecies)
 ```
 
 **7. Use `filter` to find the transect that has the highest relative abundance of elephants. What land use type is this? Use `arrange()` to sort your results.** 
