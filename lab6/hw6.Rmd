@@ -44,14 +44,11 @@ superhero_info %>%
   pull(name)
 ```
 
-```{r}
-
-```
 
 3. How many distinct "races" are represented in `superhero_info`?
 ```{r}
-superhero_info %>% 
-  summarize(superhero_races=n_distinct(race),)
+superhero_info%>%
+  summarize(superhero_race=n_distinct(race),)
 ```
 There are 62 distinct races 
 
@@ -67,6 +64,10 @@ bad_guys <- filter(superhero_info, alignment=="bad")
 
 5. Who are the good Vampires?
 ```{r}
+superhero_info%>%
+  filter(alignment=="good")%>%
+  filter(race=="Vampire")%>%
+  select(name)
 
 ```
 
