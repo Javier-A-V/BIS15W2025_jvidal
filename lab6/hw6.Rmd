@@ -48,9 +48,9 @@ superhero_info %>%
 3. How many distinct "races" are represented in `superhero_info`?
 ```{r}
 superhero_info%>%
-  summarize(superhero_race=n_distinct(race),)
+  summarize(superhero_race=n_distinct(race, na.rm=T))
 ```
-There are 62 distinct races 
+There are 61 distinct races 
 
 ## Good and Bad
 4. Let's make two different data frames, one focused on the "good guys" and another focused on the "bad guys".
@@ -65,52 +65,65 @@ bad_guys <- filter(superhero_info, alignment=="bad")
 5. Who are the good Vampires?
 ```{r}
 superhero_info%>%
-  filter(alignment=="good")%>%
-  filter(race=="Vampire")%>%
+  filter(alignment=="good", race == "Vampire")%>%
   select(name)
 
 ```
+Angel and Blade  
 
 6. Who has the height advantage- bad guys or good guys? Convert their height to meters and sort from tallest to shortest.  
 ```{r}
-
+bad_guys%>%
+  mutate(bad_guy_height=height/100)%>%
+  select(bad_guy_height, name)%>%
+  arrange(-bad_guy_height)
 ```
 
 ```{r}
-
+good_guys%>%
+  mutate(good_guy_height=height/100)%>%
+  select(good_guy_height, name)%>%
+  arrange(-good_guy_height)
 ```
+good guys have the height advantage
 
 ## `superhero_powers`
 Have a quick look at the `superhero_powers` data frame.  
 
 7. How many superheros have a combination of agility, stealth, super_strength, and stamina?
 ```{r}
-
+superhero_powers%>% 
+  filter(agility == TRUE, stealth == TRUE, super_strength == TRUE, stamina == TRUE)%>%
+  count()
 ```
-
-```{r}
-
-```
+40 superheros have a combination of those abilities 
 
 8. Who is the most powerful superhero? Have a look at the code chunk below. Use the internet to annotate each line of code so you know how it works. It's OK to use AI to help you with this task.
 ```{r}
 superhero_powers %>%
   #calls superhero_powers dataframe 
   mutate(across(-1, ~ ifelse(. == TRUE, 1, 0))) %>% 
+  #applies to all columns except the first, converts all TRUE inputs to 1 and if not TRUE then 0 
   mutate(total_powers = rowSums(across(-1))) %>% 
+  #sums up all the 1 and 0 from all the columns except the first one 
   select(hero_names, total_powers) %>% 
+  #selects hero names and the new total powers column 
   arrange(-total_powers)
+  #arranges them in descending order 
 ```
 
 ## Your Favorite
 9. Pick your favorite superhero and let's see their powers!  
 ```{r}
-
+superhero_powers%>% 
+  filter(hero_names == "Deadpool")%>%
+  select(hero_names, where(~. == TRUE))
 ```
 
 10. Can you find your hero in the superhero_info data? Show their info!  
 ```{r}
-
+superhero_info%>%
+  filter(name == "Deadpool")
 ```
 
 ## Knit and Upload
