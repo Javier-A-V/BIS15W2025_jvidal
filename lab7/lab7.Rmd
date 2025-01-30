@@ -26,7 +26,7 @@ For this lab, we will use [palmerpenguins](https://allisonhorst.github.io/palmer
 
 To use these data, they need to be installed.
 ```{r}
-#install.packages("palmerpenguins")
+install.packages("palmerpenguins")
 ```
 
 Load the library.
@@ -52,13 +52,19 @@ penguins %>%
 
 What if we wanted to summarize basic statistics for each species? We could still use `filter()` but this is cumbersome. Show how you would do this below.
 ```{r}
-
+penguins %>% 
+  filter(species=="Chinstrap")%>%
+  summarize(mean_mass=mean(body_mass_g),
+             n=n())
 ```
 
 ## `group_by()`
 The `summarize()` function is most useful when used in conjunction with `group_by()`. This allows us to group data by a categorical variable(s) of interest.
 ```{r}
-
+penguins %>% 
+  group_by(species) %>% #grouping by a categorical variable 
+  summarize(mean_body_mass=mean(body_mass_g, na.rm=T),
+            n=n())
 ```
 
 ## Practice
@@ -66,21 +72,34 @@ Use the built-in `msleep` data to answer the following questions.
 
 1. Calculate the min, max, mean, and total number of observations for body weight by feeding ecology in the msleep data.
 ```{r}
-
+msleep %>% 
+  group_by(vore) %>% 
+  summarize(min_bodyweight=min(bodywt, na.rm=T),
+            max_bodyweight=max(bodywt, na.rm=T),
+            mean_bodyweight=mean(bodywt, na.rm=T),
+            n=n())
 ```
 
 2. Calculate mean brain weight by taxonomic order in the msleep data.
 ```{r}
+msleep %>% 
+  group_by(order) %>% 
+  summarize(mean_brainwt=mean(brainwt, na.rm=TRUE))
 
 ```
 
 3. Try running the code again, but this time add `na.rm=TRUE`. What is the problem with Cetacea?
 ```{r}
-
+msleep %>% 
+  group_by(order) %>% 
+  summarize(mean_brainwt=mean(brainwt, na.rm=TRUE))
+#Cetacea doesnt have any brainwt data 
 ```
 
 ```{r}
-
+msleep %>% 
+  filter(order=="Cetacea") %>% 
+  select(order, genus, brainwt)
 ```
 
 ## Review
@@ -89,19 +108,25 @@ The summarize() and group_by() functions are powerful tools that we can use to p
 What if we are interested in the number of observations (penguins) by species and island?
 ```{r}
 penguins %>% 
-  group_by(species, island) %>% 
+  group_by(species, island) %>%  #group by more than one categorical varaible 
   summarize(n=n(), .groups= 'keep') #.groups= 'keep' is used to keep the grouping variable in the output
 ```
 
 ## Practice
-1. How does the mean of `bill_length_mm` compare between penguin species?
+1. How does the mean of `bill_length_mm` compare by islands and species?
 ```{r}
-
+penguins %>% 
+  group_by(island, species) %>% 
+  summarize(mean_bill=mean(bill_length_mm, na.rm=T),
+            .groups= 'keep')
+  #any lines of code that are after this will maintain the groups but if its .group='drop' then the groups will not be produced. 
+# .group='drop_last' will drop the last one, which is species in this case, drop_last is the default option 
 ```
 
 2. For some penguins, their sex is listed as NA. Where do these penguins occur?
 ```{r}
-
+penguins %>% #probably means the penguins are juveniles 
+  filter(sex!="male" | sex!="female")
 ```
 
 ## `across()`
@@ -121,11 +146,24 @@ penguins %>%
   summarize(across(c(species, island, sex), n_distinct))
 ```
 
+```{r}
+penguins %>% 
+  summarize(across(c(species, island, sex), \(x) n_distinct(x, na.rm=T)))
+
+#function takes x (each column that we specified) and applies n_distinct
+```
+
+
 This is very helpful for numeric variables.
 ```{r}
 penguins %>%
   summarize(across(where(is.numeric), mean, na.rm=T)) %>% 
   select(!year) #removes the year variable
+```
+```{r}
+penguins %>% 
+  filter(species=="Adelie") %>% 
+  summarize(across(where(is.numeric), \(x) mean(x, na.rm=T)))
 ```
 
 `group_by` also works.
@@ -140,12 +178,20 @@ penguins %>%
 
 Mean
 ```{r}
-
+penguins %>% 
+  group_by(species) %>% 
+  summarize(across(contains("mm"), \(x) mean(x, na.rm=T)),
+            n=n())
 ```
+
+
 
 Standard Deviation
 ```{r}
-
+penguins %>% 
+  group_by(species) %>% 
+  summarize(across(contains("mm"), list(mean=\(x) mean(x, na.rm=T),
+                                        sd=\(x) sd(x, na.rm=T))))
 ```
 
 ## Wrap-up  
