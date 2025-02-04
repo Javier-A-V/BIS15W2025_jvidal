@@ -54,7 +54,7 @@ What if we wanted to summarize basic statistics for each species? We could still
 ```{r}
 penguins %>% 
   filter(species=="Chinstrap")%>%
-  summarize(mean_mass=mean(body_mass_g),
+  summarize(mean_mass=mean(body_mass_g), #would have to do this for each species 
              n=n())
 ```
 
@@ -63,7 +63,7 @@ The `summarize()` function is most useful when used in conjunction with `group_b
 ```{r}
 penguins %>% 
   group_by(species) %>% #grouping by a categorical variable 
-  summarize(mean_body_mass=mean(body_mass_g, na.rm=T),
+  summarize(mean_body_mass=mean(body_mass_g, na.rm=T), 
             n=n())
 ```
 
@@ -73,11 +73,11 @@ Use the built-in `msleep` data to answer the following questions.
 1. Calculate the min, max, mean, and total number of observations for body weight by feeding ecology in the msleep data.
 ```{r}
 msleep %>% 
-  group_by(vore) %>% 
+  group_by(vore) %>% #groups all this data by the vore category
   summarize(min_bodyweight=min(bodywt, na.rm=T),
             max_bodyweight=max(bodywt, na.rm=T),
             mean_bodyweight=mean(bodywt, na.rm=T),
-            n=n())
+            n=n()) #this n counts the total of each vore, theres 19 carnivore in the dataset
 ```
 
 2. Calculate mean brain weight by taxonomic order in the msleep data.
@@ -93,7 +93,7 @@ msleep %>%
 msleep %>% 
   group_by(order) %>% 
   summarize(mean_brainwt=mean(brainwt, na.rm=TRUE))
-#Cetacea doesnt have any brainwt data 
+#Cetacea doesnt have any brainwt data because its a whale and they didnt record that 
 ```
 
 ```{r}
@@ -110,6 +110,7 @@ What if we are interested in the number of observations (penguins) by species an
 penguins %>% 
   group_by(species, island) %>%  #group by more than one categorical varaible 
   summarize(n=n(), .groups= 'keep') #.groups= 'keep' is used to keep the grouping variable in the output
+#n provides number of observations of the grouped variables 
 ```
 
 ## Practice
@@ -126,7 +127,7 @@ penguins %>%
 2. For some penguins, their sex is listed as NA. Where do these penguins occur?
 ```{r}
 penguins %>% #probably means the penguins are juveniles 
-  filter(sex!="male" | sex!="female")
+  count(sex, island)
 ```
 
 ## `across()`
