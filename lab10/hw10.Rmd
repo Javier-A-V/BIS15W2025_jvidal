@@ -46,41 +46,80 @@ PFTFTUG1_EF: Percentage of undergraduate students who are first-time, full-time 
 ```{r}
 glimpse(colleges)
 ```
+```{r}
+miss_var_summary(colleges)
+```
+
+
 
 2. Which cities in California have the highest number of colleges?
 ```{r}
 colleges %>% 
-  count()
+  filter(stabbr=="CA") %>% 
+  group_by(city) %>% 
+  summarize(sum_colleges = n_distinct(instnm, na.rm = T)) %>% 
+  arrange(-sum_colleges)
 ```
 
 3. Based on your answer to #2, make a plot that shows the number of colleges in the top 10 cities.
 ```{r}
-
+colleges %>% 
+  filter(stabbr=="CA") %>% 
+  group_by(city) %>% 
+  summarize(sum_colleges = n_distinct(instnm, na.rm = T)) %>% 
+  top_n(10, sum_colleges) %>% 
+  head(10) %>% 
+  ggplot(aes(x=city, y=sum_colleges))+
+  geom_bar(stat="identity")+
+  coord_flip()
 ```
 
 4. The column `COSTT4_A` is the annual cost of each institution. Which city has the highest average cost? Where is it located?
 ```{r}
-
+colleges %>% 
+  select(city, costt4_a) %>% 
+  group_by(city) %>% 
+  summarize(mean_cost = mean(costt4_a, na.rm = T)) %>% 
+  arrange(-mean_cost)
 ```
+Claremont 
 
 5. Based on your answer to #4, make a plot that compares the cost of the individual colleges in the most expensive city. Bonus! Add UC Davis here to see how it compares :>).
 ```{r}
-
+colleges %>% 
+  filter(city == "Claremont" | instnm == "University of California-Davis") %>% 
+  select(instnm, costt4_a) %>% 
+  ggplot(aes(x=instnm, y=costt4_a))+
+  geom_col()+
+  coord_flip()
 ```
+
 
 6. The column `ADM_RATE` is the admissions rate by college and `C150_4_POOLED` is the four-year completion rate. Use a scatterplot to show the relationship between these two variables. What do you think this means?
 ```{r}
-
+colleges %>% 
+  select(instnm, adm_rate, c150_4_pooled) %>% 
+  ggplot(aes(x=adm_rate, y=c150_4_pooled))+
+  geom_point()+
+  geom_smooth(method=lm, se=T, na.rm = T)
+  
 ```
+Schools with low admission rates are highly selective but will admit students who may not be struggling academically or financially that allow them to complete college compared to those colleges with high admission rates. 
 
 7. Is there a relationship between cost and four-year completion rate? (You don't need to do the stats, just produce a plot). What do you think this means?
 ```{r}
-
+colleges %>% 
+  select(instnm, costt4_a, c150_4_pooled) %>% 
+  ggplot(aes(x=costt4_a, y=c150_4_pooled))+
+  geom_point()+
+  geom_smooth(method=lm, se=T, na.rm = T)
 ```
+Higher cost colleges are able to provide more resources for students which allows them to complete 4 years. 
 
 8. The column titled `INSTNM` is the institution name. We are only interested in the University of California colleges. Make a new data frame that is restricted to UC institutions. You can remove `Hastings College of Law` and `UC San Francisco` as we are only interested in undergraduate institutions.
 ```{r}
-
+UC_Institutions <- colleges %>% 
+  filter
 ```
 
 Remove `Hastings College of Law` and `UC San Francisco` and store the final data frame as a new object `univ_calif_final`.
