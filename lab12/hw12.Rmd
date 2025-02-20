@@ -38,6 +38,10 @@ For this assignment, we are going to use the dataset [gapminder](https://cran.r-
 library("gapminder")
 ```
 
+```{r}
+gapminder <- gapminder
+```
+
 1. Use the function(s) of your choice to get an idea of the overall structure of the data frame, including its dimensions, column names, variable classes, etc. As part of this, determine how NA's are treated in the data.   
 ```{r}
 glimpse(gapminder)
@@ -49,7 +53,17 @@ miss_var_summary(gapminder)
 
 2. How many countries are represented in this dataset? Make a table and a plot that shows the number of countries by continent.  
 ```{r}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(n=n_distinct(country))
+```
 
+```{r}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(n=n_distinct(country)) %>% 
+  ggplot(aes(x=continent, y = n))+
+  geom_col()
 ```
 
 3. Which country has the largest population growth since 1952? Show this as a table.  
