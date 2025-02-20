@@ -80,7 +80,7 @@ sharks %>%
   mutate(month = factor(month, levels = 1:12, labels = month.name)) %>% 
   group_by(month) %>% 
   summarize(total_incident_month = n_distinct(incident_num)) %>%
-  ggplot(aes(x=month, y=total_incident_month))+
+  ggplot(aes(x=month, y=total_incident_month))+ #x = as_factor(month)
   geom_col()+
   coord_flip()+
   labs(title = "Total Incidents per Month",
@@ -94,15 +94,14 @@ sharks %>%
 ```{r}
 sharks %>% 
   select(county, injury) %>% 
-  filter(injury != "none") %>% 
   group_by(county, injury) %>% 
-  summarize(count=n(), .groups = "drop") %>% 
-  pivot_wider(names_from = injury, values_from = count, values_fill = list(count = 0)) %>% 
-  mutate(total_incidents = rowSums(across(where(is.numeric)), na.rm = T)) %>% 
+  summarize(total=n(), .groups = 'keep') %>% 
+  pivot_wider(names_from = injury, values_from = total) %>% 
+  mutate(total_incidents = sum(minor, major, fatal, none, na.rm=T)) %>% 
   arrange(-total_incidents) 
   
 ```
-
+San Diego 
 
 6. Use the table from #5 to make a plot that shows the total number of incidents by county.
 ```{r}
