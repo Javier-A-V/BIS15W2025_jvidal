@@ -25,7 +25,7 @@ library("naniar")
 ## Load the data
 Run the following code chunk to import the data.
 ```{r message=FALSE, warning=FALSE}
-sharks <- read_csv("data/SharkIncidents_1950_2022_220302.csv", na = c("NOT COUNTED", "NA")) %>% clean_names()
+sharks <- read_csv("data/SharkIncidents_1950_2022_220302.csv") %>% clean_names()
 ```
 
 ## Questions
@@ -33,11 +33,11 @@ sharks <- read_csv("data/SharkIncidents_1950_2022_220302.csv", na = c("NOT COUNT
 ```{r}
 glimpse(sharks)
 ```
-
+The missing values are represented as NOT COUNTED
 
 2. Notice that there are some incidents identified as "NOT COUNTED". These should be removed from the data because they were either not sharks, unverified, or were provoked. It's OK to replace the `sharks` object.
 ```{r}
-sharks <- read_csv("data/SharkIncidents_1950_2022_220302.csv", na = c("NOT COUNTED")) %>% clean_names()
+sharks <- read_csv("data/SharkIncidents_1950_2022_220302.csv", na = c("NOT COUNTED", "NA", "major*", "minor*", "none*")) %>% clean_names()
 ```
 
 
@@ -70,12 +70,14 @@ sharks %>%
 ```{r}
 sharks %>% 
   group_by(month) %>% 
-  summarize(total_incident_month = n_distinct(incident_num)) 
+  summarize(total_incident_month = n_distinct(incident_num)) %>% 
+  arrange(-total_incident_month)
 ```
 October has the highest number of incidents 
 
 ```{r}
 sharks %>% 
+  mutate(month = factor(month, levels = 1:12, labels = month.name)) %>% 
   group_by(month) %>% 
   summarize(total_incident_month = n_distinct(incident_num)) %>%
   ggplot(aes(x=month, y=total_incident_month))+
@@ -91,8 +93,13 @@ sharks %>%
 5. How do the number and types of injuries compare by county? Make a table that shows the number of injury types by county. Which county has the highest number incidents?
 ```{r}
 sharks %>% 
-  group_by(county) %>% 
-  summarize(total_injurytypes = n_distinct(mode))
+  select(county, injury) %>% 
+  filter(injury != "none") %>% 
+  group_by(county, injury) %>% 
+  summarize(count=n(), .groups = "drop") %>% 
+  pivot_wider(names_from = injury, values_from = count, values_fill = list(count = 0)) %>% 
+  mutate(total_incidents = rowSums(across(where(is.numeric)), na.rm = T)) %>% 
+  arrange(-total_incidents) 
   
 ```
 
