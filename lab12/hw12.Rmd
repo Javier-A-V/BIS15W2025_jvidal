@@ -125,17 +125,39 @@ There were many challenges that prevented an increase in life expectancy and hea
 
 7. We are interested in the relationship between per capita GDP and life expectancy; i.e. does having more money help you live longer? Show this as a plot.  
 ```{r}
-
+gapminder %>% 
+  ggplot(aes(x=lifeExp, y=gdpPercap, color = continent))+
+  geom_point()+
+  scale_y_log10()+
+  labs(title = "Life Expectancy vs Capita GDP",  x = "Life Expectancy", y = "Per Capita GDP")+
+  theme(plot.title=element_text(size = rel(1.5), hjust = .5))
 ```
+The plot does show a relation between having more money and living longer. 
 
 8. Which five countries have had the highest GDP per capita growth over the years represented in this dataset? Show this as a table.  
 ```{r}
-
+gapminder %>% 
+  select(country, year, gdpPercap) %>% 
+  pivot_wider(names_from = year,
+              values_from = gdpPercap) %>% 
+  mutate(Percap_growth = `2007` - `1952`) %>% 
+  select(country, everything()) %>% 
+  arrange(-Percap_growth)
+  
 ```
+Singapore, Norway, Hong Kong, Ireland, and Austria have had the highest GDP per capita growth over the years. 
 
 9. How does per capita GDP growth compare between these same five countries? Show this as a plot.  
 ```{r}
-
+gapminder %>% 
+  filter(country %in% c("Singapore", "Norway", "Hong Kong, China", "Ireland", "Austria")) %>% 
+  ggplot(aes(x = year, y = gdpPercap, color = country))+ 
+           geom_line(size = 1)+
+  geom_point(color = "black", size = 2)+
+  scale_x_continuous(breaks=unique(gapminder$year))+ 
+  labs(title = "Per Capita GDP Growth", x = "Year", y = "GDP per Capita")+
+  theme(plot.title=element_text(size = rel(1.5), hjust = 0.5))
+  
 ```
 
 10. Do one analysis of your choice that includes a table and plot as outputs.  
