@@ -48,6 +48,10 @@ glimpse(gapminder)
 ```
 
 ```{r}
+?gapminder
+```
+
+```{r}
 miss_var_summary(gapminder)
 ```
 
@@ -62,30 +66,62 @@ gapminder %>%
 gapminder %>% 
   group_by(continent) %>% 
   summarize(n=n_distinct(country)) %>% 
-  ggplot(aes(x=continent, y = n))+
-  geom_col()
+  ggplot(aes(x=continent, y = n, fill = continent))+
+  geom_col()+
+  labs(title = "Countries by Continent",
+       x = "Continent",
+       y = "Countries")+
+  theme(plot.title=element_text(size=rel(1.5), hjust=.5))
 ```
 
 3. Which country has the largest population growth since 1952? Show this as a table.  
 ```{r}
-
+gapminder %>% 
+  select(country, year, pop) %>% 
+  pivot_wider(names_from = year,
+              values_from = pop) %>% 
+  mutate(population_growth = `2007` - `1952`) %>% 
+  select(country, population_growth) %>% 
+  arrange(-population_growth)
 ```
-
+China has the largest population growth since 1952
 
 4. Make a plot that shows population growth for the country you found in question #3. This plot should show the change over time.  
 ```{r}
-
+gapminder %>% 
+  filter(country == "China") %>% 
+  ggplot(aes(x = year, y = pop))+
+  geom_line(size = .7)+
+  geom_point(color = "red", size = 2)+
+  labs(title = "China Pop Growth", x = "Year", y = "Population")+
+  theme(plot.title=element_text(size = rel(1.5), hjust = 0.5))
 ```
 
 5. How has global life expectancy changed between 1952 and 2007? Show the min, mean, and max for all countries in the dataset. Show this as a table.  
 ```{r}
-
+gapminder %>% 
+  group_by(country) %>% 
+  filter(year<=2007 & year>=1952) %>% 
+  summarize(min_lifeexp = min(lifeExp), 
+            mean_lifeexp = mean(lifeExp), 
+            max_lifeexp = max(lifeExp))
+  
 ```
 
 6. Make a plot that shows how mean life expectancy has changed over time for each continent. What is your interpretation of what happened in Africa between 1987 and 2002?  
 ```{r}
-
+gapminder %>% 
+  group_by(continent, year) %>%  #grouping by continent and year
+  summarize(mean_lifeexp = mean(lifeExp), .groups = 'keep') %>% #getting the mean life expectancy 
+  ggplot(aes(x = year, y = mean_lifeexp, color = continent))+ 
+           geom_line(size = 1)+
+  geom_point(color = "black", size = 2)+
+  scale_x_continuous(breaks=unique(gapminder$year))+ 
+  labs(title = "Life Expectancy Change", x = "Year", y = "Life Expectancy")+
+  theme(plot.title=element_text(size = rel(1.5), hjust = 0.5))
+  
 ```
+There were many challenges that prevented an increase in life expectancy and health during those years. 
 
 7. We are interested in the relationship between per capita GDP and life expectancy; i.e. does having more money help you live longer? Show this as a plot.  
 ```{r}
