@@ -48,10 +48,6 @@ glimpse(gapminder)
 ```
 
 ```{r}
-?gapminder
-```
-
-```{r}
 miss_var_summary(gapminder)
 ```
 
@@ -173,7 +169,7 @@ Oceania_pop
 Oceania_pop %>% 
   ggplot(aes(x=year, y = pop, color = country))+
   geom_line(size = 1)+
-  geom_point(color="red", size = 3)+
+  geom_point(color="black", size = 3)+
   labs(title = "Australia vs New Zealand Population Growth", x = "Year", y = "Population")+
   theme(plot.title=element_text(size=rel(1.5), hjust = .5))+
    scale_x_continuous(breaks=unique(Oceania_pop$year))+
