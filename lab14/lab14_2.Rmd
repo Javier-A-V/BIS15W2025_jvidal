@@ -100,7 +100,39 @@ shinyApp(ui, server)
 ## Adding Numeric Input
 Let's try adding a new numeric input so the user can change the size of the points on the plot with a slider. We can do this with the `sliderInput()` function. The `sliderInput()` function takes a label that the server function will use to access the value, the label that the ui will display to the user, a minimum and maximum value, a starting value, and a step size. Edit the script to include the slider input in the ui and for the server to access the input value.
 ```{r, eval=F, echo=T}
+library(shiny)
 
+ui <- fluidPage(
+      selectInput("x",
+                  "Select X Variable",
+                  choices=c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"),
+                  selected = "bill_length_mm"),
+      
+       selectInput("y",
+                  "Select Y Variable",
+                  choices=c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"),
+                  selected = "bill_length_mm"),
+      
+      sliderInput("pointsize", "Select the Pointsize", min = 0.5, max = 3, value = 1, step = 0.5),
+      
+      plotOutput("plot")
+)
+
+server <- function(input, output, session) {
+  
+  session$onSessionEnded(stopApp)
+  
+  output$plot <- renderPlot({
+    
+    ggplot(data=penguins, 
+           aes_string(x=input$x, y = input$y, color = "species"))+
+          geom_point(size = input$pointsize)+
+          theme_light(base_size=14)
+  })
+  
+}
+
+shinyApp(ui, server)
 ```
 
 ## ui Layout with `shinydashboard`  
