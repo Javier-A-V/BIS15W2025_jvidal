@@ -62,7 +62,7 @@ glimpse(iris)
 
 To make a plot, we need to first specify the data and map the aesthetics. The aesthetics include how each variable in our data set will be used. In the example below, I am using the aes() function to identify the x and y variables in the plot.
 ```{r}
-ggplot(data=iris, #data
+ggplot(data=iris, #data is specified 
        mapping=aes(x=Species, y=Petal.Length)) #mapped the aesthetics
 ```
 
@@ -125,7 +125,9 @@ ggplot(data=homerange,
 
 In big data sets with lots of overlapping values, over-plotting can be an issue. `geom_jitter()` is similar to `geom_point()` but it helps with over plotting by adding some random noise to the data and separating some of the individual points.
 ```{r}
-
+ggplot(data=homerange, 
+       mapping = aes(x=log10_mass, y=log10_hra))+ 
+  geom_jitter()
 ```
 
 To add a regression (best of fit) line, we just add another layer.
@@ -133,20 +135,20 @@ To add a regression (best of fit) line, we just add another layer.
 ggplot(data=homerange,
        mapping=aes(x=log10_mass, y=log10_hra))+
   geom_point()+
-  geom_smooth(method=lm, se=T)
+  geom_smooth(method = lm, se = T)
 ```
 
 ### Practice
 1. What is the relationship between log10.hra and log10.preymass? What do you notice about how ggplot treats NA's?
 ```{r}
-ggplot(data=homerange, 
-       mapping=aes(x=log10_hra, y=log10_preymass))+
-         geom_point(na.rm=T)+
-  geom_smooth(method=lm, se=F, na.rm=T)
+names(homerange)
 ```
 
 ```{r}
-
+ggplot(data = homerange, 
+     mapping=aes(x = log10_hra, y = log10_preymass))+
+  geom_point(na.rm=T)+ 
+  geom_smooth(method = lm, se = F, na.rm = T)
 ```
 
 ### Bar Plot: `geom_bar()`
@@ -174,9 +176,8 @@ Unlike `geom_bar()`, `geom_col()` allows us to specify an x-axis and a y-axis.
 homerange %>% 
   filter(family=="salmonidae") %>% 
   select(common_name, log10_mass) %>% 
-  ggplot(aes(x=common_name, y=log10_mass))+
-  geom_col()+ 
-  coord_flip()
+  ggplot(aes(y=common_name, x=log10_mass))+
+  geom_col()
 ```
 
 `geom_bar()` with `stat="identity"`
@@ -194,8 +195,7 @@ homerange %>%
 1. Filter the `homerange` data to include `mammals` only.
 ```{r}
 homerange %>% 
-  filter(taxon=="mammals") %>% 
-  count(taxon)
+  filter(taxon=="mammals") 
 ```
 
 ```{r}

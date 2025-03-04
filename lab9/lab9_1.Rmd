@@ -79,6 +79,8 @@ heartrate2 %>%
                values_to = "Heartrate")#separate needs to know which coulumn you want to split into the two column names, define how they are separated with sep = "_" BUT it is not always the case 
 ```
 
+
+
 Another way of using separate is to specify the position of the split. In this case, we want to split the patient column at the last character.
 ```{r}
 heartrate2 %>% 
@@ -89,7 +91,7 @@ We would still need to deal with the "_" in the patient column. We can do this u
 ```{r}
 heartrate2 %>% 
   separate(patient, into= c("patient", "sex"), sep = -1) %>% 
-  mutate(patient=str_remove(patient, "_")) %>% 
+  mutate(patient=str_remove(patient, "_")) %>%  #remove the _ from the patient variable 
   pivot_longer(-c(patient, sex), 
                names_to = "Drug",
                values_to = "Heartrate")#strngr , says to remove the underscore from patient 
@@ -122,7 +124,7 @@ Rules:
 
 ```{r}
 tb_data <- read_csv("data/tb_data.csv")
-tb_data
+tb_data #observe that the observations "cases, population" are in the rows
 ```
 
 When using `pivot_wider()` we use `names_from` to identify the variables (new column names) and `values_from` to identify the values associated with the new columns.
@@ -136,12 +138,12 @@ tb_data %>%
 1. Load the `gene_exp.csv` data as a new object `gene_exp`. Are these data tidy? Use `pivot_wider()` to tidy the data.
 ```{r}
 gene_exp <- read_csv("data/gene_exp.csv")
-gene_exp
+gene_exp # observe that type contains treatment and control which could be column names
 ```
 
 ```{r}
 gene_exp %>% 
-  pivot_wider(names_from = "type",
+  pivot_wider(names_from = "type", 
               values_from = "L4_values")
 ```
 

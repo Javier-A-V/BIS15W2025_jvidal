@@ -95,10 +95,13 @@ sydneybeaches_long %>%
 9. What was the most polluted beach in 2013?
 ```{r}
 sydneybeaches_long %>% 
-  group_by(year, site) %>% 
-  summarize(max_pollution = max(mean_enterococci, na.rm = T),
-            .groups = 'keep') %>% 
-  arrange(-max_pollution)
+  pivot_wider(names_from = "site", 
+              values_from = "mean_enterococci") %>% 
+  filter(year==2013) %>% 
+  pivot_longer(-year, 
+               names_to = "site", 
+               values_to = "mean_enterocci_cfu_100ml") %>% 
+  arrange(desc(mean_enterocci_cfu_100ml))
 ```
 Little Bay Beach was the most polluted on average in 2013
 
