@@ -153,9 +153,9 @@ the days should be values in their own cells
 ```{r}
 plant_data %>% 
   pivot_longer(day1:day30,
-               names_to = "Day",
-               values_to = "Expression",
-               values_drop_na = TRUE)
+               names_to = "v1", 
+               values_to = "v2", 
+               values_drop_na = T)
 ```
 
 ## Example 3: more than one variable in a column name
