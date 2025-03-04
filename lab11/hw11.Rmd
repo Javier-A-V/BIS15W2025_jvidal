@@ -89,6 +89,14 @@ sharks %>%
   theme(plot.title = element_text(size=rel(1.5), hjust=.5))
 ```
 
+```{r}
+sharks %>% 
+  grouping(month) %>% 
+  summarize(total=n()) %>% 
+  ggplot(aes(x=as_factor(month), y = total))+
+  geom_col()+
+```
+
 
 5. How do the number and types of injuries compare by county? Make a table that shows the number of injury types by county. Which county has the highest number incidents?
 ```{r}
