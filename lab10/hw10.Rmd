@@ -61,6 +61,12 @@ colleges %>%
   arrange(-sum_colleges)
 ```
 
+```{r}
+colleges %>% 
+  count(city) %>% 
+  arrange(desc(n))
+```
+
 3. Based on your answer to #2, make a plot that shows the number of colleges in the top 10 cities.
 ```{r}
 colleges %>% 
@@ -71,6 +77,15 @@ colleges %>%
   head(10) %>%
   ggplot(aes(x=city, y=sum_colleges))+
   geom_bar(stat="identity")+
+  coord_flip()
+```
+
+```{r}
+colleges %>% 
+  count(city) %>% 
+  top_n(10, n) %>% 
+  ggplot(aes(x=reorder(city,n), y = n))+
+  geom_col()+
   coord_flip()
 ```
 
@@ -94,14 +109,22 @@ colleges %>%
   coord_flip()
 ```
 
+```{r}
+colleges %>% 
+  filter(instnm == "University of California-Davis" | city == "Claremont" & costt4_a!="NA") %>% 
+  ggplot(aes(x=instnm, y=costt4_a))+
+  geom_col()+
+  coord_flip()
+```
+
 
 6. The column `ADM_RATE` is the admissions rate by college and `C150_4_POOLED` is the four-year completion rate. Use a scatterplot to show the relationship between these two variables. What do you think this means?
 ```{r}
 colleges %>% 
   select(instnm, adm_rate, c150_4_pooled) %>% 
   ggplot(aes(x=adm_rate, y=c150_4_pooled))+
-  geom_point()+
-  geom_smooth(method=lm, se=T, na.rm = T)
+  geom_point(na.rm = T)+
+  geom_smooth(method=lm, se=F, na.rm = T)
   
 ```
 Schools with low admission rates are highly selective but will admit students who may not be struggling academically or financially that allow them to complete college compared to those colleges with high admission rates. 
@@ -124,10 +147,20 @@ UC_Institutions <- colleges %>%
 
 ```
 
+```{r}
+univ_calif <- colleges %>% 
+  filter(str_detect(instnm, "University of California"))
+```
+
 Remove `Hastings College of Law` and `UC San Francisco` and store the final data frame as a new object `univ_calif_final`.
 ```{r}
 univ_calif_final <- UC_Institutions %>% 
   filter(!instnm %in% c("University of California-Hastings College of Law", "University of California-San Francisco"))
+```
+
+```{r}
+univ_calif_final <- univ_calif %>% 
+  filter(city!="San Francisco")
 ```
 
 Use `separate()` to separate institution name into two new columns "UNIV" and "CAMPUS".
@@ -147,7 +180,7 @@ UC Riverside has the highest admission rate and UC Berkeley has the lowest
 ```{r}
 univ_calif_final %>% 
   select(instnm, adm_rate) %>% 
-  ggplot(aes(x=instnm, y=adm_rate, fill = instnm))+
+  ggplot(aes(x=reorder(instnm, adm_rate), y=adm_rate, fill = instnm))+
   geom_bar(stat = "identity")+
   coord_flip()
 ```
@@ -165,7 +198,7 @@ UC San Diego confers the majority of degrees in biological or biomed science
 ```{r}
 univ_calif_final %>% 
   select(instnm, pcip26) %>% 
-  ggplot(aes(x=instnm, y=pcip26, fill = instnm))+
+  ggplot(aes(x=reorder(instnm, pcip26), y=pcip26, fill = instnm))+
   geom_bar(stat = "identity")+
   coord_flip()
 ```

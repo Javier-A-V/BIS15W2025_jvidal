@@ -50,6 +50,15 @@ penguins %>%
   geom_col()
 ```
 
+```{r}
+penguins %>% 
+  count(island) %>% 
+  ggplot(aes(x=island, y=n))+
+  geom_col()+
+  labs(title = "Penguin Counts by Island", x = "Island", y = "Count")+
+  theme_minimal()
+```
+
 ## Practice
 1. What if we wanted a plot that showed the number of measured penguins for each species?
 ```{r}
@@ -135,7 +144,7 @@ homerange %>%
 homerange %>% 
   filter(class=="mammalia" & trophic.guild=="carnivore") %>% 
   select(family, trophic.guild, log10.mass) %>% 
-  ggplot(aes(x=family, y=log10.mass))+
+  ggplot(aes(x=family, y=log10.mass, fill = family))+
   geom_boxplot()+
   coord_flip()
 ```
