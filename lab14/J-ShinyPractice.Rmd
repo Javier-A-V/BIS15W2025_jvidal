@@ -98,7 +98,8 @@ server <- function(input, output, session) {
   session$onSessionEnded(stopApp)
   
    # Create a color palette for trophic guilds
-  pal <- colorFactor(palette = "Set1", domain = nematode$trophic_guild)
+  pal <- colorFactor(palette = c("#E41A1C", "#377EB8", "#FF7F00", "#984EA3", "#F1C40F"), 
+                   domain = unique(nematode$trophic_guild))
   
   # Filtered data based on user input, only include rows where percent > 0
   filtered_data <- reactive({ #this is for the map 
